@@ -113,10 +113,8 @@ publishing {
     }
     repositories {
         maven {
-            name = 'OSSRH'
-            def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
-            url = version.toString().endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            name = 'CentralPortal'
+            url = 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
             credentials {
                 username = System.getenv('OSSRH_USERNAME') ?: findProperty('ossrhUsername') ?: ''
                 password = System.getenv('OSSRH_PASSWORD') ?: findProperty('ossrhPassword') ?: ''

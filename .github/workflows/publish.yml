@@ -49,7 +49,6 @@ jobs:
           else
             # Feature/develop branches: latest tag + branch name + SNAPSHOT
             LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-            # Sanitize branch name for version
             BRANCH=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9]/-/g')
             VERSION="${LATEST_TAG#v}-${BRANCH}-SNAPSHOT"
             IS_SNAPSHOT="true"
@@ -63,14 +62,16 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: ./gradlew build
 
-      - name: Publish to OSSRH
+      - name: Publish to Central Portal
         env:
           VERSION: ${{ steps.version.outputs.version }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
           GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
-        run: ./gradlew :springdoc-openapi-starter-webmvc-redoc:publishMavenJavaPublicationToOSSRHRepository
+        run: |
+          ./gradlew :springdoc-openapi-starter-webmvc-redoc:publishMavenJavaPublicationToCentralPortalRepository
+          ./gradlew :springdoc-openapi-starter-webflux-redoc:publishMavenJavaPublicationToCentralPortalRepository
 
       - name: Create GitHub Release
         if: github.ref_type == 'tag'
@@ -79,3 +80,4 @@ jobs:
           generate_release_notes: true
           files: |
             springdoc-openapi-starter-webmvc-redoc/build/libs/*.jar
+            springdoc-openapi-starter-webflux-redoc/build/libs/*.jar
