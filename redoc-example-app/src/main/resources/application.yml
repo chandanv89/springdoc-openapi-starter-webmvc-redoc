@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: redoc-example-app
+
+springdoc:
+  redoc:
+    path: /redoc
+    title: Bookstore API Documentation
+    # Uncomment below to use CDN instead of bundled JS:
+    # use-cdn: true
+    # Redoc display options:
+    sort-required-props-first: true
+    expand-responses: "200"
+    # Custom theme example:
+    # theme: '{"sidebar":{"backgroundColor":"#1a1a2e"},"colors":{"primary":{"main":"#e94560"}}}'

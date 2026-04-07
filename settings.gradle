@@ -1,0 +1,5 @@
+rootProject.name = 'springdoc-openapi-redoc'
+
+include 'springdoc-openapi-starter-webmvc-redoc'
+include 'springdoc-openapi-starter-webflux-redoc'
+include 'redoc-example-app'

@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+    id 'org.springframework.boot' version '3.4.4' apply false
+}
+
+/**
+ * Resolves the project version using semantic versioning:
+ *   - CI sets VERSION env var (e.g. "1.2.0" for releases, "1.2.0-SNAPSHOT" for snapshots)
+ *   - Locally, falls back to the latest git tag or "0.0.1-SNAPSHOT"
+ */
+def resolveVersion() {
+    // CI pipeline sets VERSION env var
+    if (System.getenv('VERSION')) {
+        return System.getenv('VERSION')
+    }
+    // Fallback: derive from git tags locally
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--abbrev=0'
+            standardOutput = stdout
+            errorOutput = new ByteArrayOutputStream()
+            ignoreExitValue = true
+        }
+        def tag = stdout.toString().trim().replaceFirst('^v', '')
+        return tag ? "${tag}-SNAPSHOT" : '0.0.1-SNAPSHOT'
+    } catch (Exception ignored) {
+        return '0.0.1-SNAPSHOT'
+    }
+}
+
+allprojects {
+    group = 'com.github.chandanv89'
+    version = resolveVersion()
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+}

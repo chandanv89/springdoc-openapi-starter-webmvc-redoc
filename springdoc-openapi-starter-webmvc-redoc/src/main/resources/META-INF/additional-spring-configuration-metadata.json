@@ -1,0 +1,119 @@
+{
+  "groups": [
+    {
+      "name": "springdoc.redoc",
+      "type": "com.github.chandanv89.springdoc.redoc.RedocConfigProperties",
+      "description": "Configuration properties for the Redoc API documentation UI."
+    }
+  ],
+  "properties": [
+    {
+      "name": "springdoc.redoc.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether the Redoc UI endpoint is enabled.",
+      "defaultValue": true
+    },
+    {
+      "name": "springdoc.redoc.path",
+      "type": "java.lang.String",
+      "description": "The URL path where the Redoc UI is served.",
+      "defaultValue": "/redoc"
+    },
+    {
+      "name": "springdoc.redoc.spec-url",
+      "type": "java.lang.String",
+      "description": "The URL of the OpenAPI specification to render.",
+      "defaultValue": "/v3/api-docs"
+    },
+    {
+      "name": "springdoc.redoc.title",
+      "type": "java.lang.String",
+      "description": "The HTML page title for the Redoc documentation page.",
+      "defaultValue": "API Documentation"
+    },
+    {
+      "name": "springdoc.redoc.use-cdn",
+      "type": "java.lang.Boolean",
+      "description": "Whether to load the Redoc JS from a CDN instead of the bundled version.",
+      "defaultValue": false
+    },
+    {
+      "name": "springdoc.redoc.cdn-url",
+      "type": "java.lang.String",
+      "description": "The CDN URL for the Redoc standalone JS file. Used only when use-cdn is true.",
+      "defaultValue": "https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"
+    },
+    {
+      "name": "springdoc.redoc.font-url",
+      "type": "java.lang.String",
+      "description": "Google Fonts (or any web font provider) URL for loading custom fonts. Defaults to Inter + JetBrains Mono. Set to empty string to disable."
+    },
+    {
+      "name": "springdoc.redoc.disable-search",
+      "type": "java.lang.Boolean",
+      "description": "When true, disables search indexing and hides the search box."
+    },
+    {
+      "name": "springdoc.redoc.hide-download-buttons",
+      "type": "java.lang.Boolean",
+      "description": "When true, hides the 'Download' button for saving the API definition source file."
+    },
+    {
+      "name": "springdoc.redoc.sort-required-props-first",
+      "type": "java.lang.Boolean",
+      "description": "When true, displays required properties first in schemas."
+    },
+    {
+      "name": "springdoc.redoc.expand-responses",
+      "type": "java.lang.String",
+      "description": "Controls which responses to expand by default. Use comma-separated codes (e.g. '200,201') or 'all'."
+    },
+    {
+      "name": "springdoc.redoc.path-in-middle-panel",
+      "type": "java.lang.Boolean",
+      "description": "When true, displays the path link and HTTP verb in the middle panel."
+    },
+    {
+      "name": "springdoc.redoc.hide-hostname",
+      "type": "java.lang.Boolean",
+      "description": "When true, hides the hostname in the operation definition."
+    },
+    {
+      "name": "springdoc.redoc.hide-loading",
+      "type": "java.lang.Boolean",
+      "description": "When true, hides the loading animation."
+    },
+    {
+      "name": "springdoc.redoc.native-scrollbars",
+      "type": "java.lang.Boolean",
+      "description": "When true, uses native browser scrollbars instead of custom ones."
+    },
+    {
+      "name": "springdoc.redoc.json-samples-expand-level",
+      "type": "java.lang.String",
+      "description": "Sets the default expand level for JSON payload samples. Use a number or 'all'."
+    },
+    {
+      "name": "springdoc.redoc.theme",
+      "type": "java.lang.String",
+      "description": "JSON string for Redoc theme configuration. Overrides the default Inter + JetBrains Mono font theme."
+    }
+  ],
+  "hints": [
+    {
+      "name": "springdoc.redoc.expand-responses",
+      "values": [
+        { "value": "all", "description": "Expand all responses by default." },
+        { "value": "200", "description": "Expand only 200 responses." },
+        { "value": "200,201", "description": "Expand 200 and 201 responses." }
+      ]
+    },
+    {
+      "name": "springdoc.redoc.json-samples-expand-level",
+      "values": [
+        { "value": "2", "description": "Default expand level." },
+        { "value": "all", "description": "Expand all levels." }
+      ]
+    }
+  ]
+}
