@@ -6,6 +6,7 @@ on:
       - main
       - 'release/**'
       - 'develop'
+      - 'feature/**'
     tags:
       - 'v*'
 
@@ -41,16 +42,11 @@ jobs:
             # Tag push: v1.2.3 -> 1.2.3 (release version)
             VERSION="${GITHUB_REF_NAME#v}"
             IS_SNAPSHOT="false"
-          elif [[ "${{ github.ref_name }}" == "main" ]]; then
-            # Main branch without tag: get latest tag + SNAPSHOT
-            LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-            VERSION="${LATEST_TAG#v}-SNAPSHOT"
-            IS_SNAPSHOT="true"
           else
-            # Feature/develop branches: latest tag + branch name + SNAPSHOT
+            # Branch push: <latest-tag>-<yyyyMMdd>-SNAPSHOT
             LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-            BRANCH=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9]/-/g')
-            VERSION="${LATEST_TAG#v}-${BRANCH}-SNAPSHOT"
+            DATETIME=$(date -u +'%Y%m%d%H%M%S')
+            VERSION="${LATEST_TAG#v}-${DATETIME}-SNAPSHOT"
             IS_SNAPSHOT="true"
           fi
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
