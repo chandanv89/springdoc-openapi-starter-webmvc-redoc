@@ -2,7 +2,7 @@
   "groups": [
     {
       "name": "springdoc.redoc",
-      "type": "com.github.chandanv89.springdoc.redoc.RedocConfigProperties",
+      "type": "io.github.chandanv89.springdoc.redoc.RedocConfigProperties",
       "description": "Configuration properties for the Redoc API documentation UI."
     }
   ],

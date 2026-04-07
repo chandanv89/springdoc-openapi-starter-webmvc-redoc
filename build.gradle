@@ -31,7 +31,7 @@ def resolveVersion() {
 }
 
 allprojects {
-    group = 'com.github.chandanv89'
+    group = 'io.github.chandanv89'
     version = resolveVersion()
 
     repositories {
