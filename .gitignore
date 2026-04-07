@@ -1,0 +1,35 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+# AI folders
+bmad/
+.cursor/
+.copilot/
+
+# Downloaded Redoc JS (re-downloaded during build)
+springdoc-openapi-starter-webmvc-redoc/src/main/resources/META-INF/resources/webjars/redoc/redoc.standalone.js
