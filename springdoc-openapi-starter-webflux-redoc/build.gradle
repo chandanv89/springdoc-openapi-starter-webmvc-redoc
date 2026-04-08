@@ -45,6 +45,11 @@ publishing {
             from components.java
             artifactId = 'springdoc-openapi-starter-webflux-redoc'
 
+            versionMapping {
+                usage('java-api') { fromResolutionOf('runtimeClasspath') }
+                usage('java-runtime') { fromResolutionResult() }
+            }
+
             pom {
                 name = 'SpringDoc OpenAPI Starter WebFlux Redoc'
                 description = 'Spring Boot starter that integrates Redoc API documentation UI with springdoc-openapi for WebFlux applications'
