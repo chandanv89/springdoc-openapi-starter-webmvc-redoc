@@ -62,7 +62,7 @@ Your project needs both `springdoc-openapi` (provides the `/v3/api-docs` endpoin
 ```groovy
 dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.6'
-    implementation 'com.github.chandanv89:springdoc-openapi-starter-webmvc-redoc:1.0.0-SNAPSHOT'
+    implementation 'io.github.chandanv89:springdoc-openapi-starter-webmvc-redoc:1.0.0'
 }
 ```
 
@@ -75,9 +75,9 @@ dependencies {
     <version>2.8.6</version>
 </dependency>
 <dependency>
-    <groupId>com.github.chandanv89</groupId>
+    <groupId>io.github.chandanv89</groupId>
     <artifactId>springdoc-openapi-starter-webmvc-redoc</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 

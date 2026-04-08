@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (semver, e.g. 1.0.0, 1.1.0, 2.0.0)'
+        required: true
+        type: string
+      bump_type:
+        description: 'Version bump type (ignored if version is provided manually)'
+        required: false
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release Tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine release version
+        id: semver
+        run: |
+          if [[ -n "${{ inputs.version }}" ]]; then
+            # Manual version input
+            NEW_VERSION="${{ inputs.version }}"
+          else
+            # Auto-bump from latest tag
+            LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+            CURRENT="${LATEST_TAG#v}"
+
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+            MAJOR=${MAJOR:-0}
+            MINOR=${MINOR:-0}
+            PATCH=${PATCH:-0}
+
+            case "${{ inputs.bump_type }}" in
+              major)
+                MAJOR=$((MAJOR + 1))
+                MINOR=0
+                PATCH=0
+                ;;
+              minor)
+                MINOR=$((MINOR + 1))
+                PATCH=0
+                ;;
+              patch)
+                PATCH=$((PATCH + 1))
+                ;;
+            esac
+
+            NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          fi
+
+          # Validate semver format
+          if ! [[ "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: '${NEW_VERSION}' is not a valid semver version (expected X.Y.Z)"
+            exit 1
+          fi
+
+          echo "version=${NEW_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Release version: ${NEW_VERSION}"
+
+      - name: Check tag does not already exist
+        run: |
+          if git rev-parse "v${{ steps.semver.outputs.version }}" >/dev/null 2>&1; then
+            echo "Error: Tag v${{ steps.semver.outputs.version }} already exists"
+            exit 1
+          fi
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create and push tag
+        run: |
+          TAG="v${{ steps.semver.outputs.version }}"
+          git tag -a "${TAG}" -m "Release ${TAG}"
+          git push origin "${TAG}"
+          echo "Created and pushed tag: ${TAG}"
+
+      - name: Summary
+        run: |
+          echo "## Release Created" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ steps.semver.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: v${{ steps.semver.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The [Publish workflow](../actions/workflows/publish.yml) will now build and publish this release to Maven Central." >> $GITHUB_STEP_SUMMARY

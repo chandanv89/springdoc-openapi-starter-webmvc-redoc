@@ -1,0 +1,103 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'io.spring.dependency-management'
+}
+
+ext {
+    springBootVersion = '3.4.4'
+    springdocVersion = '2.8.6'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    }
+}
+
+dependencies {
+    api project(':springdoc-openapi-starter-webmvc-redoc') // Reuses RedocConfigProperties + RedocIndexTransformer
+
+    compileOnly 'org.springframework.boot:spring-boot-starter-webflux'
+    compileOnly "org.springdoc:springdoc-openapi-starter-webflux-api:${springdocVersion}"
+    compileOnly 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.28'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    testImplementation "org.springdoc:springdoc-openapi-starter-webflux-api:${springdocVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'springdoc-openapi-starter-webflux-redoc'
+
+            versionMapping {
+                usage('java-api') { fromResolutionOf('runtimeClasspath') }
+                usage('java-runtime') { fromResolutionResult() }
+            }
+
+            pom {
+                name = 'SpringDoc OpenAPI Starter WebFlux Redoc'
+                description = 'Spring Boot starter that integrates Redoc API documentation UI with springdoc-openapi for WebFlux applications'
+                url = 'https://github.com/chandanv89/springdoc-openapi-starter-webmvc-redoc'
+                licenses {
+                    license {
+                        name = 'Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'chandanv89'
+                        name = 'Chandan Veerabhadrappa'
+                        email = 'chandanv89@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/chandanv89/springdoc-openapi-starter-webmvc-redoc.git'
+                    developerConnection = 'scm:git:ssh://github.com/chandanv89/springdoc-openapi-starter-webmvc-redoc.git'
+                    url = 'https://github.com/chandanv89/springdoc-openapi-starter-webmvc-redoc'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'CentralPortal'
+            url = version.toString().endsWith('-SNAPSHOT')
+                    ? 'https://central.sonatype.com/repository/maven-snapshots/'
+                    : 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
+            credentials {
+                username = System.getenv('OSSRH_USERNAME') ?: findProperty('ossrhUsername') ?: ''
+                password = System.getenv('OSSRH_PASSWORD') ?: findProperty('ossrhPassword') ?: ''
+            }
+        }
+    }
+}
+
+signing {
+    def signingKey = System.getenv('GPG_SIGNING_KEY')
+    def signingPassword = System.getenv('GPG_SIGNING_PASSWORD') ?: ''
+    if (signingKey) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
+    sign publishing.publications.mavenJava
+}
+
+tasks.withType(Sign).configureEach {
+    onlyIf { System.getenv('GPG_SIGNING_KEY') != null }
+}
