@@ -39,19 +39,13 @@ jobs:
         id: version
         run: |
           if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            # Tag push: v1.2.3 -> 1.2.3 (release version)
             VERSION="${GITHUB_REF_NAME#v}"
-            IS_SNAPSHOT="false"
           else
-            # Branch push: <latest-tag>-<yyyyMMdd>-SNAPSHOT
             LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-            DATETIME=$(date -u +'%Y%m%d%H%M%S')
-            VERSION="${LATEST_TAG#v}-${DATETIME}-SNAPSHOT"
-            IS_SNAPSHOT="true"
+            VERSION="${LATEST_TAG#v}-SNAPSHOT"
           fi
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "is_snapshot=${IS_SNAPSHOT}" >> "$GITHUB_OUTPUT"
-          echo "Publishing version: ${VERSION} (snapshot: ${IS_SNAPSHOT})"
+          echo "Publishing version: ${VERSION}"
 
       - name: Build
         env:
@@ -65,9 +59,7 @@ jobs:
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
           GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
-        run: |
-          ./gradlew :springdoc-openapi-starter-webmvc-redoc:publishMavenJavaPublicationToCentralPortalRepository
-          ./gradlew :springdoc-openapi-starter-webflux-redoc:publishMavenJavaPublicationToCentralPortalRepository
+        run: ./gradlew publish
 
       - name: Create GitHub Release
         if: github.ref_type == 'tag'
