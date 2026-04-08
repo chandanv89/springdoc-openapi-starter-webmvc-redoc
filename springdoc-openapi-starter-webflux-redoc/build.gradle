@@ -75,18 +75,6 @@ publishing {
             }
         }
     }
-    repositories {
-        maven {
-            name = 'CentralPortal'
-            url = version.toString().endsWith('-SNAPSHOT')
-                    ? 'https://central.sonatype.com/repository/maven-snapshots/'
-                    : 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
-            credentials {
-                username = System.getenv('OSSRH_USERNAME') ?: findProperty('ossrhUsername') ?: ''
-                password = System.getenv('OSSRH_PASSWORD') ?: findProperty('ossrhPassword') ?: ''
-            }
-        }
-    }
 }
 
 signing {
