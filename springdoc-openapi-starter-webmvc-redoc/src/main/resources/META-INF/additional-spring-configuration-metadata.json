@@ -103,16 +103,31 @@
     {
       "name": "springdoc.redoc.expand-responses",
       "values": [
-        { "value": "all", "description": "Expand all responses by default." },
-        { "value": "200", "description": "Expand only 200 responses." },
-        { "value": "200,201", "description": "Expand 200 and 201 responses." }
+        {
+          "value": "all",
+          "description": "Expand all responses by default."
+        },
+        {
+          "value": "200",
+          "description": "Expand only 200 responses."
+        },
+        {
+          "value": "200,201",
+          "description": "Expand 200 and 201 responses."
+        }
       ]
     },
     {
       "name": "springdoc.redoc.json-samples-expand-level",
       "values": [
-        { "value": "2", "description": "Default expand level." },
-        { "value": "all", "description": "Expand all levels." }
+        {
+          "value": "2",
+          "description": "Default expand level."
+        },
+        {
+          "value": "all",
+          "description": "Expand all levels."
+        }
       ]
     }
   ]
