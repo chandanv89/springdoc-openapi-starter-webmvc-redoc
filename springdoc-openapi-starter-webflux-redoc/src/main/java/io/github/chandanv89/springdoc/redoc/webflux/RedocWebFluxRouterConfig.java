@@ -34,30 +34,31 @@ import org.springframework.web.reactive.function.server.ServerResponse;
  */
 public class RedocWebFluxRouterConfig {
 
-    private final RedocIndexTransformer indexTransformer;
-    private final String path;
+  private final RedocIndexTransformer indexTransformer;
+  private final String path;
 
-    /**
-     * Creates a new router configuration.
-     *
-     * @param indexTransformer the transformer that renders the Redoc HTML
-     * @param path the URL path to serve the Redoc page at
-     */
-    public RedocWebFluxRouterConfig(final RedocIndexTransformer indexTransformer, final String path) {
-        this.indexTransformer = indexTransformer;
-        this.path = path;
-    }
+  /**
+   * Creates a new router configuration.
+   *
+   * @param indexTransformer the transformer that renders the Redoc HTML
+   * @param path             the URL path to serve the Redoc page at
+   */
+  public RedocWebFluxRouterConfig(final RedocIndexTransformer indexTransformer, final String path) {
+    this.indexTransformer = indexTransformer;
+    this.path = path;
+  }
 
-    /**
-     * Creates the {@link RouterFunction} that serves the Redoc page at the configured path.
-     *
-     * @return the router function for the Redoc endpoint
-     */
-    public RouterFunction<ServerResponse> redocRouterFunction() {
-        return RouterFunctions.route()
-                .GET(path, request -> ServerResponse.ok()
-                        .contentType(MediaType.TEXT_HTML)
-                        .bodyValue(indexTransformer.render()))
-                .build();
-    }
+  /**
+   * Creates the {@link RouterFunction} that serves the Redoc page at the configured path.
+   *
+   * @return the router function for the Redoc endpoint
+   */
+  public RouterFunction<ServerResponse> redocRouterFunction() {
+    return RouterFunctions.route().GET(path, request -> ServerResponse.ok()
+                                                                      .contentType(MediaType.TEXT_HTML)
+                                                                      .bodyValue(indexTransformer.render(request.requestPath()
+                                                                                                                .contextPath()
+                                                                                                                .value())))
+                          .build();
+  }
 }

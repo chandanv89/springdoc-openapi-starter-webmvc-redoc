@@ -2,14 +2,20 @@ spring:
   application:
     name: redoc-example-app
 
+server:
+  servlet:
+    context-path: /example-app
+
 springdoc:
   redoc:
     path: /redoc
     title: Bookstore API Documentation
-    # Uncomment below to use CDN instead of bundled JS:
+    ## Uncomment the below line to override the default specUrl
+    # spec-url: ${server.servlet.context-path:}/v3/api-docs
+    ## Uncomment below to use CDN instead of bundled JS:
     # use-cdn: true
-    # Redoc display options:
+    ## Redoc display options:
     sort-required-props-first: true
     expand-responses: "200"
-    # Custom theme example:
+    ## Custom theme example:
     # theme: '{"sidebar":{"backgroundColor":"#1a1a2e"},"colors":{"primary":{"main":"#e94560"}}}'

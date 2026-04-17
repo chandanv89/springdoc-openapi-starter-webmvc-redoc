@@ -17,6 +17,7 @@
 package io.github.chandanv89.springdoc.redoc;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -36,25 +37,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class RedocWelcomeController {
 
-    private final RedocIndexTransformer indexTransformer;
+  private final RedocIndexTransformer indexTransformer;
 
-    /**
-     * Creates a new controller with the given index transformer.
-     *
-     * @param indexTransformer the transformer that renders the Redoc HTML
-     */
-    public RedocWelcomeController(final RedocIndexTransformer indexTransformer) {
-        this.indexTransformer = indexTransformer;
-    }
+  /**
+   * Creates a new controller with the given index transformer.
+   *
+   * @param indexTransformer the transformer that renders the Redoc HTML
+   */
+  public RedocWelcomeController(final RedocIndexTransformer indexTransformer) {
+    this.indexTransformer = indexTransformer;
+  }
 
-    /**
-     * Serves the Redoc API documentation page.
-     *
-     * @return the rendered Redoc HTML page as a string
-     */
-    @GetMapping(value = "${springdoc.redoc.path:/redoc}", produces = MediaType.TEXT_HTML_VALUE)
-    @ResponseBody
-    public String redoc() {
-        return indexTransformer.render();
-    }
+  /**
+   * Serves the Redoc API documentation page.
+   *
+   * @param request the incoming HTTP request (used to resolve servlet context path)
+   * @return the rendered Redoc HTML page as a string
+   */
+  @GetMapping(value = "${springdoc.redoc.path:/redoc}", produces = MediaType.TEXT_HTML_VALUE)
+  @ResponseBody
+  public String redoc(final HttpServletRequest request) {
+    return indexTransformer.render(request.getContextPath());
+  }
 }
